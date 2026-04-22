@@ -4,7 +4,7 @@ import { useWallet } from "../context/WalletContext";
 
 export function useTransaction() {
   const { signer, account, addTx } = useWallet();
-  const [status, setStatus]   = useState("idle"); // idle | signing | pending | success | error
+  const [status, setStatus]   = useState("idle"); 
   const [txHash, setTxHash]   = useState(null);
   const [signature, setSignature] = useState(null);
   const [gasEstimate, setGasEstimate] = useState(null);
@@ -13,7 +13,7 @@ export function useTransaction() {
     if (!signer) throw new Error("Wallet not connected");
     const message = JSON.stringify({ ...formData, timestamp: Date.now() });
     setStatus("signing");
-    const sig = await signer.signMessage(message); // uses personal_sign under the hood
+    const sig = await signer.signMessage(message); 
     setSignature(sig);
     setStatus("idle");
     return { message, sig };
@@ -22,7 +22,6 @@ export function useTransaction() {
   const sendTransaction = async (formData) => {
     if (!signer) throw new Error("Wallet not connected");
 
-    // Encode product data as hex
     const data = ethers.hexlify(ethers.toUtf8Bytes(JSON.stringify({
       productId:   formData.productId,
       productName: formData.productName,
@@ -36,13 +35,12 @@ export function useTransaction() {
       data,
     };
 
-    // Estimate gas first
     const provider = signer.provider;
     const gas = await provider.estimateGas(txParams);
     setGasEstimate(ethers.formatUnits(gas, "gwei"));
 
     setStatus("pending");
-    const tx = await signer.sendTransaction(txParams); // MetaMask popup fires here
+    const tx = await signer.sendTransaction(txParams); 
 
     const newTx = {
       hash:        tx.hash,
@@ -58,7 +56,6 @@ export function useTransaction() {
     addTx(newTx);
     setTxHash(tx.hash);
 
-    // Wait for confirmation in background
     tx.wait().then(receipt => {
       addTx({ ...newTx, status: receipt.status === 1 ? "Success" : "Failed" });
       setStatus("success");

@@ -1,15 +1,6 @@
-/**
- * IPFS Utility for Decentralized File Storage using Pinata
- */
-
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
 const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
 
-/**
- * Uploads a file to IPFS via Pinata.
- * @param {File} file - The file object to upload.
- * @returns {Promise<string>} - The IPFS hash (CID) of the uploaded file.
- */
 export const uploadToIPFS = async (file) => {
   if (!file) throw new Error("No file provided");
 
@@ -54,11 +45,6 @@ export const uploadToIPFS = async (file) => {
   }
 };
 
-/**
- * Returns the gateway URL for an IPFS hash.
- * @param {string} hash - The IPFS hash (CID).
- * @returns {string} - The public gateway URL.
- */
 export const getIPFSUrl = (hash) => {
   return `https://gateway.pinata.cloud/ipfs/${hash}`;
 };
